@@ -1,0 +1,20 @@
+{
+  "name": "apigateway-lambda-dynamodb-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@types/node": "^25.3.0",
+    "aws-cdk": "^2.1107.0",
+    "aws-cdk-lib": "^2.240.0",
+    "constructs": "^10.5.1",
+    "typescript": "^5.9.3"
+  }
+}
