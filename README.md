@@ -35,6 +35,8 @@ AWS Secret Access Key [****************rjLj]: 9erPQ8+\*\*\*\*O3YxOTi
 
 Default region name [eu-west-1]: eu-north-1 for stockholms
 
+- `aws sts get-caller-identity` - let aws configured user details
+
 ### Verify your configuration
 
 PS C:\Users\varin> aws s3 ls
@@ -60,9 +62,10 @@ PS C:\Users\varin> aws s3 ls
   - `cdk init app --language=typescript` (Create CDK app project with typescript as language)
   - `cdk bootstrap` (Deploy 'CDKToolkit' in Cloud Formation)
   - `cdk synth` (Dryrun 'Cdkapp' resources in Cloud Formation without actual deployment, just create template in the cdk.out folder, CDK synthesizes CloudFormation templates for each individual stack defined in your bin file, allowing for organized and modular resource management. This capability is essential for deploying complex infrastructure efficiently.)
-  - `cdk deploy` (deploy this stack to your default AWS account/region)
+  - `cdk deploy --all` (deploy all the stack to your default AWS account/region)
   - `cdk deploy --parameters duration=1`
   - `cdk diff` compare deployed stack with current state
+  - `aws cloudformation list-stacks` To list all the cloudformation stack
   - `cdk destroy` destroy the cdk stack
   - `cdk destroy <stack-name>` destroy the cdk stack
   - `cdk ls` List cdk stack
@@ -89,3 +92,38 @@ No, CloudFormation cannot delete non-empty S3 buckets, which means that not all 
 both the CDK deploy and CDK diff commands invoke the synth command to generate the CloudFormation templates necessary for deployment and comparison of stacks.
 
 L3 CDK construct is designed to abstract and combine multiple L1 (low-level) and L2 (high-level) constructs, simplifying resource management and enhancing reusability in your infrastructure code.
+
+### One stack can be added in /bin/cdkapp.ts
+
+// There can be only one stack here
+new PhotoappStack(app, "PhotoappStack", {});
+
+### Each CDK resource has two IDs
+
+1. LogicalID - CloudFormation Id used for reference resource internally.
+2. PhysicalID - AWS resource ID (ARN arn:aws:s3:::photoappstack-photobucket465738b3-zvxips8iqzkl)
+
+# Use Stack ID for resource physicalID
+
+It is always a good practice to use CloudFormation intinsic function like Fn.select to get the subset of stackId and use that in the underlying resource physical Id for logical connection.
+
+### Need to multiple stack
+
+1. Some stacks contains sensitive information like IAM
+2. Some stacks take a lot of time to deploy and destroy
+3. Resources get big and need organization
+
+Have separte stack using separtion of concerns concept
+
+- UIStack
+- DataStack
+- APIStack
+- AuthStack
+
+### CDK Aspects
+
+Used to modify resources after they are created
+Use Cases
+
+- Add tags to resources
+- Enforce security and best practices (cdk-nag library)
